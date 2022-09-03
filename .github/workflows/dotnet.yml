@@ -55,14 +55,12 @@ jobs:
       with:
         name: dotnet-app
     - name: SCP Files
-      uses: appleboy/scp-action@master
+      uses: mdallasanta/ssh-scp-deploy@master
       with:
         host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
+        user: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
-        rm: true
-        overwrite: true
-        source: "."
-        target: "/home/lapis-api/api"
-    - name: List  
-      run: ls
+        local: "./"
+        remote: "/home/lapis-api/api"
+        ssh_options: -o StrictHostKeyChecking=no                     # A set of ssh_option separated by -o - REQUIRED false - DEFAULT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+        scp_options: -v
