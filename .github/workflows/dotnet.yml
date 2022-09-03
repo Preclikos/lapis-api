@@ -55,7 +55,7 @@ jobs:
       with:
         name: dotnet-app
     - name: SCP Files
-      uses: mdallasanta/ssh-scp-deploy@master
+      uses: mdallasanta/ssh-scp-deploy@main
       with:
         host: ${{ secrets.SSH_HOST }}
         user: ${{ secrets.SSH_USER }}
