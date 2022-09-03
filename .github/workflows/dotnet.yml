@@ -64,3 +64,9 @@ jobs:
         files: "*"
         remote-path: "/home/lapis-api/api"
         clean: true
+        before-upload: |
+           echo "Executed before upload"
+           systemctl --user stop lapis-api
+        after-upload: |
+           echo "Executed after upload"
+           systemctl --user start lapis-api
