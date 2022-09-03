@@ -55,13 +55,12 @@ jobs:
       with:
         name: dotnet-app
     - name: SCP Files
-      uses: mdallasanta/ssh-scp-deploy@main
+      uses: ilCollez/ssh-scp-deploy@v1.1.0
       with:
         host: ${{ secrets.SSH_HOST }}
-        user: ${{ secrets.SSH_USER }}
+        port: 22
+        username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
-        local: "./"
-        remote: "/home/lapis-api/api"
-        pre_upload: "rm -r /home/lapis-api/api/."
-        ssh_options: -o StrictHostKeyChecking=no                     # A set of ssh_option separated by -o - REQUIRED false - DEFAULT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-        scp_options: -v
+        files: "*"
+        remote-path: "/home/lapis-api/api"
+        clean: true
