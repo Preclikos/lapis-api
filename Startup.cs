@@ -8,7 +8,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
+using WebApi.Database.Interfaces;
+using WebApi.Database.Repositories;
 using WebApi.Databases;
 
 namespace LapisApi
@@ -97,12 +101,28 @@ namespace LapisApi
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                 };
+                o.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async ctx =>
+                    {
+                        var buildedServices = services.ConfigureAll<IUserCacheRepository>();//.Configure<IUserCacheRepository>()
+                        
+                            var token = ctx.SecurityToken as JwtSecurityToken;
+                            var userRepository = buildedServices.GetRequiredService<UserCacheRepository>();
+
+                        }
+                    }
+                };
             });
 
 
             services.AddAuthorization();
 
+            services.AddMemoryCache();
             services.AddSingleton<LapisDataContext>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserCacheRepository, UserCacheRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
