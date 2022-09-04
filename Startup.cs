@@ -10,7 +10,6 @@ using Prometheus;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Http;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
@@ -105,11 +104,13 @@ namespace LapisApi
                 {
                     OnTokenValidated = async ctx =>
                     {
-                        var buildedServices = services.ConfigureAll<IUserCacheRepository>();//.Configure<IUserCacheRepository>()
-                        
-                            var token = ctx.SecurityToken as JwtSecurityToken;
-                            var userRepository = buildedServices.GetRequiredService<UserCacheRepository>();
+                        using (var buildedServices = services.BuildServiceProvider())
+                        {
 
+                            var token = ctx.SecurityToken as JwtSecurityToken;
+                            var userRepository = buildedServices.GetRequiredService<IUserCacheRepository>();
+
+                            userRepository.OnGetCacheGetOrCreate(token.Subject, token.Claims.Single(s => s.Type == "name").Value);
                         }
                     }
                 };

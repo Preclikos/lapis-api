@@ -18,19 +18,32 @@ namespace WebApi.Database.Repositories
             this.userRepository = userRepository;
         }
 
-        public User OnGetCacheGetOrCreate(string key)
+        public User OnGetCacheGetOrCreate(string key, string name)
         {
             var cacheKey = nameof(UserCacheRepository) + "_";
             return memoryCache.GetOrCreate<User>(
                 cacheKey + key,
-                GetOrCreateDbUser);
-
+                cacheEntry => 
+                { 
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(CacheTimeSpan);
+                    return GetOrCreateDbUser(key, name); 
+                });
         }
 
-        private User GetOrCreateDbUser(ICacheEntry arg)
+        private User GetOrCreateDbUser(string key, string name)
         {
-            
-            throw new NotImplementedException();
+            var user = userRepository.GetBySub(key);
+            if(user == null)
+            {
+                user = new User() { Sub = key, Name = name };
+                userRepository.Add(user);
+            }
+            else
+            {
+                userRepository.UpdateNameBySub(key, name);
+            }
+
+            return user;
         }
 
         public async Task OnGetCacheGetOrCreateAsync(string key)
