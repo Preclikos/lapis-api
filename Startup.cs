@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebApi.Databases;
 
 namespace LapisApi
 {
@@ -27,13 +26,7 @@ namespace LapisApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var connstring = Configuration.GetConnectionString("WebApi");
-            Console.WriteLine(connstring);
-            /* services.AddDbContext<WebApiDataContext>(options =>
-                 options.UseMySQL(
-                         Configuration.GetConnectionString("WebApi")));
 
-            */
 
             var origins = Configuration.GetSection("AllowOrigin");
             var originArray = origins.AsEnumerable().Where(w => !string.IsNullOrEmpty(w.Value)).Select(s => s.Value).ToArray();
@@ -106,24 +99,10 @@ namespace LapisApi
                 };
             });
 
-            //Maybe load profile
-            //Additional config snipped
-
-
-
 
             services.AddAuthorization();
-            /*
-            services.AddScoped<IDownloadService, DownloadService>();
-            services.AddScoped<IFullTextSearchService, FullTextSearchService>();
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<ITorrentStatsService, TorrentStatsService>();
-            services.AddScoped<ITorrentInfoService, TorrentInfoService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ITorrentFileService, TorrentFileService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<IApprovingService, ApprovingService>();
-            services.AddScoped<IDiscordService, DiscordService>();*/
+
+            services.AddSingleton<LapisDataContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
