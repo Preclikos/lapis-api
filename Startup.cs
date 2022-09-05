@@ -10,6 +10,7 @@ using Prometheus;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
@@ -105,11 +106,17 @@ namespace LapisApi
                 {
                     OnTokenValidated = async ctx =>
                     {
-                        using (var buildedServices = services.BuildServiceProvider())
-                        {
+                        ctx.Request.Headers.Add("OnTokenValidated", new Microsoft.Extensions.Primitives.StringValues("True"));
+                    },
+                   OnChallenge = async ctx =>
+                   {
+                       ctx.Request.Headers.Add("OnTokenValidated", new Microsoft.Extensions.Primitives.StringValues("True"));
+                   },
+                   OnMessageReceived = async ctx =>
+                   {
+                       ctx.Request.Headers.Add("OnTokenValidated", new Microsoft.Extensions.Primitives.StringValues("True"));
+                   }
 
-                        }
-                    }
                 };*/
             });
 

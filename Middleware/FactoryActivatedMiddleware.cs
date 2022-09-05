@@ -20,12 +20,14 @@ namespace WebApi.Middleware
         {
             var claims = context.User.Claims;
 
-            if (claims.Any(cl => cl.Type == subType) && claims.Any(cl => cl.Type == nameType))
-            {
+           /* if (context.Request.Headers.Any(a => a.Key == "OnTokenValidated"))
+            {*/
+                if (context.User.HasClaim(c => c.Type == subType) && context.User.HasClaim(c => c.Type == subType))
+                {
+                    userCacheRepository.OnGetCacheGetOrCreate(claims.Single(s => s.Type == subType).Value, claims.Single(s => s.Type == nameType).Value);
 
-                userCacheRepository.OnGetCacheGetOrCreate(claims.Single(s => s.Type == subType).Value, claims.Single(s => s.Type == nameType).Value);
-            }
-
+                }
+            //}
             await next(context);
         }
     }
