@@ -13,6 +13,7 @@ using System.Linq;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
+using WebApi.Middleware;
 
 namespace LapisApi
 {
@@ -100,25 +101,22 @@ namespace LapisApi
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                 };
-                o.Events = new JwtBearerEvents
+                /*o.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = async ctx =>
                     {
                         using (var buildedServices = services.BuildServiceProvider())
                         {
 
-                            var token = ctx.SecurityToken as JwtSecurityToken;
-                            var userRepository = buildedServices.GetRequiredService<IUserCacheRepository>();
-
-                            userRepository.OnGetCacheGetOrCreate(token.Subject, token.Claims.Single(s => s.Type == "name").Value);
                         }
                     }
-                };
+                };*/
             });
 
 
             services.AddAuthorization();
 
+            services.AddTransient<FactoryActivatedMiddleware>();
             services.AddMemoryCache();
             services.AddSingleton<LapisDataContext>();
             services.AddSingleton<IUserRepository, UserRepository>();
@@ -168,6 +166,8 @@ namespace LapisApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseFactoryActivatedMiddleware();
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers()
