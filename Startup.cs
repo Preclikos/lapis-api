@@ -128,7 +128,7 @@ namespace LapisApi
             services.AddSingleton<LapisDataContext>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IUserCacheRepository, UserCacheRepository>();
-
+            services.AddSingleton<ILapisRepository, LapisRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

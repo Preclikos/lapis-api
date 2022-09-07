@@ -14,7 +14,11 @@ namespace WebApi.Databases
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("WebApi");
         }
+
         public IDbConnection CreateConnection()
+            => new MySqlConnection(_connectionString);
+
+        public MySqlConnection CreateMySqlConnection()
             => new MySqlConnection(_connectionString);
     }
 }
