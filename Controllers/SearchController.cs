@@ -16,10 +16,10 @@ namespace WebApi.Controllers
             this.lapisRepository = lapisRepository;
         }
 
-        [HttpGet]
         [HttpGet("Search")]
         public IAsyncEnumerable<Lapis> Search()
         {
+            HttpContext.Response.Headers.Add("X-Accel-Buffering", "no");
             return lapisRepository.SearchByCode("as");
         }
 
