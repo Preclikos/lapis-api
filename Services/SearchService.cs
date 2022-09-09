@@ -28,13 +28,13 @@ namespace WebApi.Services
                 var user = output[2];
                 var lapisId = output[3];
 
-                var searchResult = lapisRepository.GetIdByCode(country, region, user, lapisId, cancellationToken);
+                var searchResult = lapisRepository.GetIdAndCodeByCode(country, region, user, lapisId, cancellationToken);
                 var enumerator = searchResult.GetAsyncEnumerator(cancellationToken);
 
                 while (await enumerator.MoveNextAsync())
                 {
-                    var lapis = await lapisRepository.GetByIdAsync(enumerator.Current, cancellationToken);
-                    lapis.Code = country + "/" + region + "/" + user + "/" + lapisId;
+                    var lapis = await lapisRepository.GetByIdAsync(enumerator.Current.LapisId, cancellationToken);
+                    lapis.Code = enumerator.Current.Country + "/" + enumerator.Current.Region + "/" + enumerator.Current.User + "/" + enumerator.Current.Lapis;
                     yield return lapis;
                 }
             }

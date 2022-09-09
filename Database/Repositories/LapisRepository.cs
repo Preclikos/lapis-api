@@ -78,14 +78,14 @@ namespace WebApi.Database.Repositories
             return false;
         }
 
-        public async IAsyncEnumerable<int> GetIdByCode(string country, string region, string user, string lapis, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<LapisCode> GetIdAndCodeByCode(string country, string region, string user, string lapis, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             using (var connection = _context.CreateMySqlConnection())
             {
 
                 var builder = new SqlBuilder();
 
-                var selector = builder.AddTemplate(@"SELECT LapisId FROM `LapisCodes` /**where**/"); //`Country` = @Country AND `Region` = @Region AND `User` = @User AND `Lapis` = @Lapis";)
+                var selector = builder.AddTemplate(@"SELECT * FROM `LapisCodes` /**where**/"); //`Country` = @Country AND `Region` = @Region AND `User` = @User AND `Lapis` = @Lapis";)
 
                 if (!String.IsNullOrEmpty(country))
                 {
@@ -139,7 +139,7 @@ namespace WebApi.Database.Repositories
 
                 var reader = await connection.ExecuteReaderAsync(new CommandDefinition(selector.RawSql, selector.Parameters, cancellationToken: cancellationToken));
 
-                var parser = new ReaderParser<int>(reader);
+                var parser = new ReaderParser<LapisCode>(reader);
                 var enumerator = parser.GetAsyncEnumerator(cancellationToken);
 
                 while (await enumerator.MoveNextAsync())
