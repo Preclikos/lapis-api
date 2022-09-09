@@ -9,7 +9,7 @@ namespace WebApi.Database.Interfaces
     {
         public int Add(Lapis entity);
 
-        public IAsyncEnumerable<int> GetIdByCode(int country, int region, int user, int lapis, CancellationToken cancellationToken);
+        public IAsyncEnumerable<int> GetIdByCode(string country, string region, string user, string lapis, CancellationToken cancellationToken);
 
         public Task<Lapis> GetByIdAsync(int id, CancellationToken cancellationToken);
     }
