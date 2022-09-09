@@ -11,6 +11,6 @@ namespace WebApi.Database.Interfaces
 
         public IAsyncEnumerable<int> GetIdByCode(int country, int region, int user, int lapis, CancellationToken cancellationToken);
 
-        public Task<Lapis> GetById(int id);
+        public Task<Lapis> GetByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

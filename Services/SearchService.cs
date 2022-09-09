@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using WebApi.Database.Interfaces;
@@ -16,7 +17,7 @@ namespace WebApi.Services
             this.lapisRepository = lapisRepository;
         }
 
-        public async IAsyncEnumerable<Lapis> GetLapisesByCode(string code, CancellationToken cancellationToken)
+        public async IAsyncEnumerable<Lapis> GetLapisesByCode(string code, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             const string pattern = @"[^\d]+";
             var output = Regex.Split(code, pattern);
@@ -29,11 +30,11 @@ namespace WebApi.Services
                 int lapisId = Convert.ToInt32(output[3]);
 
                 var searchResult = lapisRepository.GetIdByCode(country, region, user, lapisId, cancellationToken);
-                var enumerator = searchResult.GetAsyncEnumerator();
+                var enumerator = searchResult.GetAsyncEnumerator(cancellationToken);
 
                 while(await enumerator.MoveNextAsync())
                 {
-                    var lapis = await lapisRepository.GetById(enumerator.Current);
+                    var lapis = await lapisRepository.GetByIdAsync(enumerator.Current, cancellationToken);
                     lapis.Code = country + "/" + region + "/" + user + "/" + lapisId;
                     yield return lapis;
                 }

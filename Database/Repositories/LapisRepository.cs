@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Database.Helpers;
@@ -37,14 +38,14 @@ namespace WebApi.Database.Repositories
             throw new System.NotImplementedException();
         }
 
-        public async Task<Lapis> GetById(int id)
+        public async Task<Lapis> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             using (var connection = _context.CreateConnection())
             {
                 var sql = @"SELECT * FROM `Lapises` WHERE `Id`=@Id LIMIT 1";
 
                 connection.Open();
-                var result = await connection.QueryFirstOrDefaultAsync<Lapis>(sql, new { Id = id });
+                var result = await connection.QueryFirstOrDefaultAsync<Lapis>(new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
                 connection.Close();
 
                 return result;
@@ -52,7 +53,7 @@ namespace WebApi.Database.Repositories
         }
 
 
-        public async IAsyncEnumerable<int> GetIdByCode(int country, int region, int user, int lapis, CancellationToken cancellationToken)
+        public async IAsyncEnumerable<int> GetIdByCode(int country, int region, int user, int lapis, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             using (var connection = _context.CreateMySqlConnection())
             {
@@ -60,7 +61,7 @@ namespace WebApi.Database.Repositories
                 var values = new { Country = country, Region = region, User = user, Lapis = lapis };
 
                 var sql = @"SELECT LapisId FROM `LapisCodes` WHERE `Country` = @Country AND `Region` = @Region AND `User` = @User AND `Lapis` = @Lapis";
-                var reader = await connection.ExecuteReaderAsync(sql, values);
+                var reader = await connection.ExecuteReaderAsync(new CommandDefinition(sql, values, cancellationToken: cancellationToken));
 
                 var parser = new ReaderParser<int>(reader);
                 var enumerator = parser.GetAsyncEnumerator(cancellationToken);
