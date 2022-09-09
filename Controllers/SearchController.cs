@@ -1,26 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using WebApi.Attributes;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Models;
+using WebApi.Services.Interfaces;
 
 namespace WebApi.Controllers
 {
+    
     [ApiController]
     [Route("[controller]")]
     public class SearchController : ControllerBase
     {
-        private readonly ILapisRepository lapisRepository;
-        public SearchController(ILapisRepository lapisRepository)
+        private readonly ISearchService searchService;
+        public SearchController(ISearchService searchService)
         {
-            this.lapisRepository = lapisRepository;
+            this.searchService = searchService;
         }
 
-        [HttpGet("Search")]
-        public IAsyncEnumerable<Lapis> Search()
+        [HttpGet("Code")]
+        [ProxyDisableBuffer]
+        public IAsyncEnumerable<Lapis> Code(string code, CancellationToken cancellationToken)
         {
-            HttpContext.Response.Headers.Add("X-Accel-Buffering", "no");
-            return lapisRepository.SearchByCode("as");
+            return searchService.GetLapisesByCode(code, cancellationToken);
         }
 
     }

@@ -42,7 +42,6 @@
     <Folder Include="Requests\" />
     <Folder Include="Responses\" />
     <Folder Include="Services\Models\" />
-    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

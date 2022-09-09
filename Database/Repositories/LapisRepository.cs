@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Database.Helpers;
 using WebApi.Database.Interfaces;
@@ -36,33 +37,36 @@ namespace WebApi.Database.Repositories
             throw new System.NotImplementedException();
         }
 
-        public User GetBySub(string sub)
+        public async Task<Lapis> GetById(int id)
         {
             using (var connection = _context.CreateConnection())
             {
-                var sql = @"SELECT * FROM `Users` WHERE `Sub`=@Sub LIMIT 1";
+                var sql = @"SELECT * FROM `Lapises` WHERE `Id`=@Id LIMIT 1";
 
                 connection.Open();
-                var result = connection.QueryFirstOrDefault<User>(sql, new { Sub = sub });
+                var result = await connection.QueryFirstOrDefaultAsync<Lapis>(sql, new { Id = id });
                 connection.Close();
 
                 return result;
             }
         }
 
-        public async IAsyncEnumerable<Lapis> SearchByCode(string code)
+
+        public async IAsyncEnumerable<int> GetIdByCode(int country, int region, int user, int lapis, CancellationToken cancellationToken)
         {
             using (var connection = _context.CreateMySqlConnection())
             {
 
-                var sql = @"SELECT * FROM `Lapises` WHERE `Name` LIKE '_r%'";
-                var reader = await connection.ExecuteReaderAsync(sql, null);
-                var parser = new ReaderParser<Lapis>(reader);
-                var enumerator = parser.GetAsyncEnumerator();
+                var values = new { Country = country, Region = region, User = user, Lapis = lapis };
+
+                var sql = @"SELECT LapisId FROM `LapisCodes` WHERE `Country` = @Country AND `Region` = @Region AND `User` = @User AND `Lapis` = @Lapis";
+                var reader = await connection.ExecuteReaderAsync(sql, values);
+
+                var parser = new ReaderParser<int>(reader);
+                var enumerator = parser.GetAsyncEnumerator(cancellationToken);
 
                 while (await enumerator.MoveNextAsync())
                 {
-                    await Task.Delay(1000);
                     yield return enumerator.Current;
                 }
 

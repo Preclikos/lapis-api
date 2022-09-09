@@ -13,7 +13,7 @@ namespace WebApi.Database.Helpers
         private DbDataReader Reader { get; }
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return new ReaderParserEnumerator<T>(Reader);
+            return new ReaderParserEnumerator<T>(Reader, cancellationToken);
         }
     }
 }

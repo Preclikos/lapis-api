@@ -15,6 +15,8 @@ using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
 using WebApi.Middleware;
+using WebApi.Services;
+using WebApi.Services.Interfaces;
 
 namespace LapisApi
 {
@@ -123,12 +125,19 @@ namespace LapisApi
 
             services.AddAuthorization();
 
-            services.AddTransient<FactoryActivatedMiddleware>();
+            services.AddTransient<UserNameMiddleware>();
+            services.AddTransient<ProxyMiddleware>();
+
             services.AddMemoryCache();
             services.AddSingleton<LapisDataContext>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IUserCacheRepository, UserCacheRepository>();
             services.AddSingleton<ILapisRepository, LapisRepository>();
+
+            services.AddScoped<ISearchService, SearchService>();
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -174,7 +183,8 @@ namespace LapisApi
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseFactoryActivatedMiddleware();
+            app.UseUserNameMiddleware();
+            app.UseProxyMiddleware();
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers()
