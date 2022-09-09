@@ -85,7 +85,7 @@ namespace WebApi.Database.Repositories
 
                 var builder = new SqlBuilder();
 
-                var selector = builder.AddTemplate(@"SELECT * FROM `LapisCodes` /**where**/"); //`Country` = @Country AND `Region` = @Region AND `User` = @User AND `Lapis` = @Lapis";)
+                var selector = builder.AddTemplate(@"SELECT * FROM `LapisCodes` /**where**/");
 
                 if (!String.IsNullOrEmpty(country))
                 {
@@ -134,8 +134,6 @@ namespace WebApi.Database.Repositories
                         builder.Where("Lapis = @Lapis", new { Lapis = lapis });
                     }
                 }
-
-                Console.WriteLine(selector.ToString());
 
                 var reader = await connection.ExecuteReaderAsync(new CommandDefinition(selector.RawSql, selector.Parameters, cancellationToken: cancellationToken));
 
