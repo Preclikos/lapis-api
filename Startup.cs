@@ -135,7 +135,7 @@ namespace LapisApi
             services.AddSingleton<ILapisRepository, LapisRepository>();
 
             services.AddScoped<ISearchService, SearchService>();
-
+            services.AddScoped<IFeedService, FeedService>();
 
 
         }
