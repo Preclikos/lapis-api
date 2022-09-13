@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Models;
 using WebApi.Services.Interfaces;
