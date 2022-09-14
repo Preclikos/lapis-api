@@ -7,5 +7,7 @@ namespace WebApi.Services.Interfaces
     public interface IUserService
     {
         public Task<User> GetUserById(int id, CancellationToken cancellationToken);
+
+        public Task<User> GetUserBySub(string sub, CancellationToken cancellationToken);
     }
 }

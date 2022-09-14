@@ -30,6 +30,20 @@ namespace WebApi.Database.Repositories
             }
         }
 
+        public async Task<User> GetBySub(string sub, CancellationToken cancellationToken)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = @"SELECT * FROM `Users` WHERE `Sub`=@Sub LIMIT 1";
+
+                connection.Open();
+                var result = await connection.QueryFirstOrDefaultAsync<User>(new CommandDefinition(sql, new { Sub = sub }, cancellationToken: cancellationToken));
+                connection.Close();
+
+                return result;
+            }
+        }
+
         public User GetBySub(string sub)
         {
             using (var connection = _context.CreateConnection())
@@ -37,7 +51,7 @@ namespace WebApi.Database.Repositories
                 var sql = @"SELECT * FROM `Users` WHERE `Sub`=@Sub LIMIT 1";
 
                 connection.Open();
-                var result = connection.QueryFirstOrDefault<User>(sql, new { Sub = sub });
+                var result = connection.QueryFirstOrDefault<User>(new CommandDefinition(sql, new { Sub = sub }));
                 connection.Close();
 
                 return result;

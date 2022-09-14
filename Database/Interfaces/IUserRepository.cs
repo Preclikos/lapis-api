@@ -14,6 +14,8 @@ namespace WebApi.Database.Interfaces
 
         public User GetBySub(string sub);
 
+        public Task<User> GetBySub(string sub, CancellationToken cancellationToken);
+
         public int UpdateNameBySub(string sub, string name);
     }
 }
