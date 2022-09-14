@@ -58,6 +58,20 @@ namespace WebApi.Database.Repositories
             }
         }
 
+        public async Task<UserProfile> GeProfiletById(int id, CancellationToken cancellationToken)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = @"SELECT * FROM `UserProfiles` WHERE `Id`=@Id LIMIT 1";
+
+                connection.Open();
+                var result = await connection.QueryFirstOrDefaultAsync<UserProfile>(new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
+                connection.Close();
+
+                return result;
+            }
+        }
+
         public int UpdateNameBySub(string sub, string name)
         {
             using (var connection = _context.CreateConnection())

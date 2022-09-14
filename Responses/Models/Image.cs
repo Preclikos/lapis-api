@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Responses.Models
 {
-    public class FeedImage
+    public class Image
     {
         public string Src { get; set; }
         public string Alt { get; set; }

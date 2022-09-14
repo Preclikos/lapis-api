@@ -15,9 +15,9 @@ namespace WebApi.Services
         const int FeedLimit = 8;
 
         private readonly IActivityRepository activityRepository;
-        private readonly IImageRepository imageRepository;
+        private readonly ILapisImageRepository imageRepository;
 
-        public FeedService(IActivityRepository activityRepository, IImageRepository imageRepository)
+        public FeedService(IActivityRepository activityRepository, ILapisImageRepository imageRepository)
         {
             this.activityRepository = activityRepository;
             this.imageRepository = imageRepository;
@@ -48,17 +48,17 @@ namespace WebApi.Services
             };
         }
 
-        private FeedImage GetFeedImage(IEnumerable<Image> images, int imageId)
+        private Responses.Models.Image GetFeedImage(IEnumerable<Database.Models.LapisImage> images, int imageId)
         {
             var image = images.SingleOrDefault(sw => imageId == sw.Id);
 
-            return image != null ? new FeedImage
+            return image != null ? new Responses.Models.Image
             {
                 Src = image.Path,
                 Width = image.Width,
                 Height = image.Height,
                 Alt = ""
-            } : new FeedImage();
+            } : new Responses.Models.Image();
         }
     }
 }

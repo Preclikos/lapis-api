@@ -4,7 +4,7 @@
     {
         public FeedActivity()
         {
-            Image = new FeedImage();
+            Image = new Image();
         }
 
         public string Type { get; set; }
@@ -14,6 +14,6 @@
 
         public int UserId { get; set; }
 
-        public FeedImage Image { get; set; }
+        public Image Image { get; set; }
     }
 }

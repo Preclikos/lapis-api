@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using WebApi.Attributes;
-using WebApi.Database.Interfaces;
-using WebApi.Database.Models;
+using WebApi.Responses.Models;
 using WebApi.Services.Interfaces;
 
 namespace WebApi.Controllers
 {
-    
+
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase

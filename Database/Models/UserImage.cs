@@ -1,9 +1,8 @@
 ﻿namespace WebApi.Database.Models
 {
-    public class Image
+    public class UserImage
     {
         public int Id { get; set; }
-        public int LapisId { get; set; }
         public int UserId { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }

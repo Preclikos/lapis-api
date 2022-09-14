@@ -10,6 +10,8 @@ namespace WebApi.Database.Interfaces
 
         public Task<User> GetById(int id, CancellationToken cancellationToken);
 
+        public Task<UserProfile> GeProfiletById(int id, CancellationToken cancellationToken);
+
         public User GetBySub(string sub);
 
         public int UpdateNameBySub(string sub, string name);
