@@ -6,7 +6,7 @@ namespace WebApi.Responses.Models
     {
         public int Id { get; set; }
         public string Type { get; set; }
-        public string Path { get; set; }
+        public int LapisId { get; set; }
         public string Description { get; set; }
         public long TimeStamp { get; set; }
         public int UserId { get; set; }

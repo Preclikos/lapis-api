@@ -35,7 +35,7 @@ namespace WebApi.Services
                     {
                         Id = s.Id,
                         Type = "Location",
-                        Path = "/activity/",
+                        LapisId = s.LapisId,
                         Description = s.Description,
                         TimeStamp = s.TimeStamp.ToUnixTime(),
                         UserId = s.UserId,
