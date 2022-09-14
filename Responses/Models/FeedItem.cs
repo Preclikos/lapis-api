@@ -1,15 +1,15 @@
-﻿namespace WebApi.Responses.Models
+﻿using System;
+
+namespace WebApi.Responses.Models
 {
     public class FeedItem
     {
-        public FeedItem()
-        {
-            User = new FeedUser();
-            Activity = new FeedActivity();
-        }
-
         public int Id { get; set; }
-        public FeedUser User { get; set; }
-        public FeedActivity Activity { get; set; }
+        public string Type { get; set; }
+        public string Path { get; set; }
+        public string Description { get; set; }
+        public long TimeStamp { get; set; }
+        public int UserId { get; set; }
+        public FeedImage Image { get; set; }
     }
 }

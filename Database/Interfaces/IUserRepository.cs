@@ -1,10 +1,14 @@
-﻿using WebApi.Database.Models;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using WebApi.Database.Models;
 
 namespace WebApi.Database.Interfaces
 {
     public interface IUserRepository
     {
         public int Add(User entity);
+
+        public Task<User> GetById(int id, CancellationToken cancellationToken);
 
         public User GetBySub(string sub);
 

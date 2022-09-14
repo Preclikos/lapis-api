@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using System.Threading;
+using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Models;
 using WebApi.Databases;
@@ -36,6 +38,20 @@ namespace WebApi.Database.Repositories
 
                 connection.Open();
                 var result = connection.QueryFirstOrDefault<User>(sql, new { Sub = sub });
+                connection.Close();
+
+                return result;
+            }
+        }
+
+        public async Task<User> GetById(int id, CancellationToken cancellationToken)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = @"SELECT * FROM `Users` WHERE `Id`=@Id LIMIT 1";
+
+                connection.Open();
+                var result = await connection.QueryFirstOrDefaultAsync<User>(new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
                 connection.Close();
 
                 return result;

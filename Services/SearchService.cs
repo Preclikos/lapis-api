@@ -36,6 +36,7 @@ namespace WebApi.Services
 
                     while (await enumerator.MoveNextAsync())
                     {
+                        await Task.Delay(1000);
                         var lapis = await lapisRepository.GetByIdAsync(enumerator.Current.LapisId, cancellationToken);
                         lapis.Code = enumerator.Current.Country + "/" + enumerator.Current.Region + "/" + enumerator.Current.User + "/" + enumerator.Current.Lapis;
                         yield return lapis;

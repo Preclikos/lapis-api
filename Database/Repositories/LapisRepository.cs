@@ -85,7 +85,7 @@ namespace WebApi.Database.Repositories
 
                 var builder = new SqlBuilder();
 
-                var selector = builder.AddTemplate(@"SELECT * FROM `LapisCodes` /**where**/");
+                var selector = builder.AddTemplate(@"SELECT * FROM `LapisCodes` /**where**/ LIMIT 20");
 
                 if (!String.IsNullOrEmpty(country))
                 {

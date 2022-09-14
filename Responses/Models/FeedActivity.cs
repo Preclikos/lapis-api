@@ -11,6 +11,9 @@
         public string Title { get; set; }
         public string Path { get; set; }
         public string Excerpt { get; set; }
+
+        public int UserId { get; set; }
+
         public FeedImage Image { get; set; }
     }
 }

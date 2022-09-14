@@ -130,10 +130,15 @@ namespace LapisApi
 
             services.AddMemoryCache();
             services.AddSingleton<LapisDataContext>();
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IUserCacheRepository, UserCacheRepository>();
-            services.AddSingleton<ILapisRepository, LapisRepository>();
 
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserCacheRepository, UserCacheRepository>();
+
+            services.AddTransient<ILapisRepository, LapisRepository>();
+            services.AddTransient<IActivityRepository, ActivityRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
+
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IFeedService, FeedService>();
 
