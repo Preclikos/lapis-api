@@ -7,6 +7,6 @@ namespace WebApi.Database.Interfaces
 {
     public interface IActivityRepository
     {
-        public Task<IEnumerable<Activity>> GetLastActivities(int country, int offset, CancellationToken cancellationToken);
+        public Task<IEnumerable<Activity>> GetLastActivities(int country, int limit, int offset, CancellationToken cancellationToken);
     }
 }

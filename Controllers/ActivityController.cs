@@ -19,7 +19,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("Feed")]
-        public async Task<IEnumerable<FeedItem>> Feed(int country, int offset, CancellationToken cancellationToken)
+        public async Task<Feed> Feed(int country, int offset, CancellationToken cancellationToken)
         {
             return await feedService.GetFeedItems(0, country, cancellationToken);
         }

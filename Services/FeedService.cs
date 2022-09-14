@@ -12,6 +12,8 @@ namespace WebApi.Services
 {
     public class FeedService : IFeedService
     {
+        const int FeedLimit = 8;
+
         private readonly IActivityRepository activityRepository;
         private readonly IImageRepository imageRepository;
 
@@ -21,24 +23,29 @@ namespace WebApi.Services
             this.imageRepository = imageRepository;
         }
 
-        public async Task<IEnumerable<FeedItem>> GetFeedItems(int country, int offset, CancellationToken cancellationToken)
+        public async Task<Feed> GetFeedItems(int country, int offset, CancellationToken cancellationToken)
         {
-            var activities = await activityRepository.GetLastActivities(country, offset, cancellationToken);
+            var activities = await activityRepository.GetLastActivities(country, FeedLimit, offset, cancellationToken);
             var imageIds = activities.Select(s => s.ImageId);
 
             var images = await imageRepository.GetById(imageIds, cancellationToken);
-
-            return activities.Select(s =>
-            new FeedItem
+           var feedItems = activities
+                .Select(s =>
+                    new FeedItem
+                    {
+                        Id = s.Id,
+                        Type = "Location",
+                        Path = "/activity/",
+                        Description = s.Description,
+                        TimeStamp = s.TimeStamp.ToUnixTime(),
+                        UserId = s.UserId,
+                        Image = GetFeedImage(images, s.ImageId)
+                    }
+                );
+            return new Feed(FeedLimit)
             {
-                Id = s.Id,
-                Type = "Location",
-                Path = "/activity/",
-                Description = s.Description,
-                TimeStamp = s.TimeStamp.ToUnixTime(),
-                UserId = s.UserId,
-                Image = GetFeedImage(images, s.ImageId)
-            });
+                FeedItems = feedItems
+            };
         }
 
         private FeedImage GetFeedImage(IEnumerable<Image> images, int imageId)

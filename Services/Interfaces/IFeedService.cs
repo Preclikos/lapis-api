@@ -8,6 +8,6 @@ namespace WebApi.Services.Interfaces
 {
     public interface IFeedService
     {
-        public Task<IEnumerable<FeedItem>> GetFeedItems(int country, int offset, CancellationToken cancellationToken);
+        public Task<Feed> GetFeedItems(int country, int offset, CancellationToken cancellationToken);
     }
 }
