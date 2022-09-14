@@ -10,7 +10,7 @@ namespace WebApi.Database.Repositories
 {
     public class ActivityRepository : IActivityRepository
     {
-
+        const int feedLimit = 8;
         private readonly LapisDataContext _context;
         public ActivityRepository(LapisDataContext context)
         {
@@ -22,10 +22,10 @@ namespace WebApi.Database.Repositories
 
             using (var connection = _context.CreateConnection())
             {
-                var sql = @"SELECT * FROM `Activities` ORDER BY `Id` LIMIT 8 OFFSET @Offset";
+                var sql = @"SELECT * FROM `Activities` ORDER BY `Id` LIMIT @Limit OFFSET @Offset";
 
                 connection.Open();
-                var result = await connection.QueryAsync<Activity>(new CommandDefinition(sql, new { Offset = offset }, cancellationToken: cancellationToken));
+                var result = await connection.QueryAsync<Activity>(new CommandDefinition(sql, new { Offset = offset, Limit = feedLimit }, cancellationToken: cancellationToken));
                 connection.Close();
 
                 return result;
