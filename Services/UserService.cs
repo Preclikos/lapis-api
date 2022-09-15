@@ -28,7 +28,7 @@ namespace WebApi.Services
                 Id = user.Id,
                 Name = user.Name,
                 Motto = userProfile?.Motto ?? "",
-                CountryId = userProfile?.CountryId ?? 0,
+                Country = userProfile?.CountryId.ToString(),
                 Image = new Image
                 {
                     Src = userImage?.Path,
@@ -47,7 +47,7 @@ namespace WebApi.Services
                 Id = user.Id,
                 Name = user.Name,
                 Motto = userProfile?.Motto ?? "",
-                CountryId = userProfile?.CountryId ?? 0,
+                Country = userProfile != null ? userProfile.CountryId.ToString() : "",
                 Image = new Image
                 {
                     Src = userImage?.Path,
