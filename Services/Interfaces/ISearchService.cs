@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using WebApi.Database.Models;
+using WebApi.Responses.Models;
 
 namespace WebApi.Services.Interfaces
 {
     public interface ISearchService
     {
-        public IAsyncEnumerable<Lapis> GetLapisesByCode(string code, CancellationToken cancellationToken);
+        public IAsyncEnumerable<SearchItem> GetLapisesByCode(string code, CancellationToken cancellationToken);
     }
 }

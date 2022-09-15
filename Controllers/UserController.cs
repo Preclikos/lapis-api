@@ -17,13 +17,13 @@ namespace WebApi.Controllers
             this.userService = userService;
         }
 
-        [HttpGet("GetById")]
+        [HttpGet("Id/{id}")]
         public async Task<User> GetById(int id, CancellationToken cancellationToken)
         {
             return await userService.GetUserById(id, cancellationToken);
         }
 
-        [HttpGet("GetBySub")]
+        [HttpGet("Sub/{sub}")]
         public async Task<User> GetBySub(string sub, CancellationToken cancellationToken)
         {
             return await userService.GetUserBySub(sub, cancellationToken);
