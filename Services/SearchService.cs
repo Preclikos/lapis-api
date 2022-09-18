@@ -38,7 +38,6 @@ namespace WebApi.Services
 
                     while (await enumerator.MoveNextAsync())
                     {
-                        await Task.Delay(1000);
                         var lapis = await lapisRepository.GetByIdAsync(enumerator.Current.LapisId, cancellationToken);
                         var lapisImage = await imageRepository.GetById(lapis.ImageId, cancellationToken);
 
