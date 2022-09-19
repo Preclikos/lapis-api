@@ -1,4 +1,4 @@
-﻿namespace WebApi.Database.Models
+﻿namespace WebApi.Responses.Models
 {
     public class Lapis
     {
@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public int UserId { get; set; }
-        public int ImageId { get; set; }    
+        public Image Image { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
-using WebApi.Database.Models;
 using WebApi.Extensions;
 using WebApi.Responses.Models;
 using WebApi.Services.Interfaces;
@@ -29,19 +28,19 @@ namespace WebApi.Services
             var imageIds = activities.Select(s => s.ImageId);
 
             var images = await imageRepository.GetById(imageIds, cancellationToken);
-           var feedItems = activities
-                .Select(s =>
-                    new FeedItem
-                    {
-                        Id = s.Id,
-                        Type = "Location",
-                        LapisId = s.LapisId,
-                        Description = s.Description,
-                        TimeStamp = s.TimeStamp.ToUnixTime(),
-                        UserId = s.UserId,
-                        Image = GetFeedImage(images, s.ImageId)
-                    }
-                );
+            var feedItems = activities
+                 .Select(s =>
+                     new FeedItem
+                     {
+                         Id = s.Id,
+                         Type = "Location",
+                         LapisId = s.LapisId,
+                         Description = s.Description,
+                         TimeStamp = s.TimeStamp.ToUnixTime(),
+                         UserId = s.UserId,
+                         Image = GetFeedImage(images, s.ImageId)
+                     }
+                 );
             return new Feed(FeedLimit)
             {
                 FeedItems = feedItems

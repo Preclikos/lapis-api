@@ -142,7 +142,7 @@ namespace LapisApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IFeedService, FeedService>();
-
+            services.AddScoped<ILapisService, LapisService>();
 
         }
 

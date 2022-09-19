@@ -31,5 +31,20 @@ namespace WebApi.Database.Repositories
                 return result;
             }
         }
+
+        public async Task<IEnumerable<Activity>> GetActivitiesByLapisId(int lapisId, int feedLimit, int offset, CancellationToken cancellationToken)
+        {
+
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = @"SELECT * FROM `Activities` WHERE `LapisId`=@LapisId ORDER BY `Id` LIMIT @Limit OFFSET @Offset";
+
+                connection.Open();
+                var result = await connection.QueryAsync<Activity>(new CommandDefinition(sql, new { LapisId = lapisId, Offset = offset, Limit = feedLimit }, cancellationToken: cancellationToken));
+                connection.Close();
+
+                return result;
+            }
+        }
     }
 }

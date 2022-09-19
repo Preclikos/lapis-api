@@ -20,13 +20,13 @@ namespace WebApi.Controllers
         [HttpGet("Id/{id}")]
         public async Task<User> GetById(int id, CancellationToken cancellationToken)
         {
-            return await userService.GetUserById(id, cancellationToken);
+            return await userService.GetById(id, cancellationToken);
         }
 
         [HttpGet("Sub/{sub}")]
         public async Task<User> GetBySub(string sub, CancellationToken cancellationToken)
         {
-            return await userService.GetUserBySub(sub, cancellationToken);
+            return await userService.GetBySub(sub, cancellationToken);
         }
     }
 }

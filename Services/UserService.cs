@@ -17,7 +17,7 @@ namespace WebApi.Services
             this.imageRepository = imageRepository;
         }
 
-        public async Task<User> GetUserById(int id, CancellationToken cancellationToken)
+        public async Task<User> GetById(int id, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetById(id, cancellationToken);
             var userProfile = await userRepository.GeProfiletById(id, cancellationToken);
@@ -36,7 +36,7 @@ namespace WebApi.Services
             };
         }
 
-        public async Task<User> GetUserBySub(string sub, CancellationToken cancellationToken)
+        public async Task<User> GetBySub(string sub, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetBySub(sub, cancellationToken);
             var userProfile = await userRepository.GeProfiletById(user.Id, cancellationToken);

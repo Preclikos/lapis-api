@@ -11,11 +11,16 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class LapisController : ControllerBase
     {
-        private readonly IUserService userService;
-        public LapisController(IUserService userService)
+        private readonly ILapisService lapisService;
+        public LapisController(ILapisService lapisService)
         {
-            this.userService = userService;
+            this.lapisService = lapisService;
         }
 
+        [HttpGet("Id/{id}")]
+        public async Task<Lapis> GetLapisById(int id, CancellationToken cancellationToken)
+        {
+            return await lapisService.GetById(id, cancellationToken);
+        }
     }
 }
