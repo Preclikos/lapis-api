@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Requests\" />
+    <Folder Include="image_root\" />
     <Folder Include="Services\Models\" />
   </ItemGroup>
 

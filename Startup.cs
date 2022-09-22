@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
@@ -191,6 +191,8 @@ namespace LapisApi
 
             app.UseUserNameMiddleware();
             app.UseProxyMiddleware();
+
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers()
