@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -191,8 +192,6 @@ namespace LapisApi
 
             app.UseUserNameMiddleware();
             app.UseProxyMiddleware();
-
-            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers()
