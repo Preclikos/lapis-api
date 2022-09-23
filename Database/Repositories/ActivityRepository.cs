@@ -22,7 +22,7 @@ namespace WebApi.Database.Repositories
 
             using (var connection = _context.CreateConnection())
             {
-                var sql = @"SELECT * FROM `Activities` ORDER BY `Id` LIMIT @Limit OFFSET @Offset";
+                var sql = @"SELECT * FROM `Activities` ORDER BY `Id` DESC LIMIT @Limit OFFSET @Offset";
 
                 connection.Open();
                 var result = await connection.QueryAsync<Activity>(new CommandDefinition(sql, new { Offset = offset, Limit = feedLimit }, cancellationToken: cancellationToken));
@@ -37,7 +37,7 @@ namespace WebApi.Database.Repositories
 
             using (var connection = _context.CreateConnection())
             {
-                var sql = @"SELECT * FROM `Activities` WHERE `LapisId`=@LapisId ORDER BY `Id` LIMIT @Limit OFFSET @Offset";
+                var sql = @"SELECT * FROM `Activities` WHERE `LapisId`=@LapisId ORDER BY `Id` DESC LIMIT @Limit OFFSET @Offset";
 
                 connection.Open();
                 var result = await connection.QueryAsync<Activity>(new CommandDefinition(sql, new { LapisId = lapisId, Offset = offset, Limit = feedLimit }, cancellationToken: cancellationToken));
