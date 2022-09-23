@@ -13,10 +13,12 @@ namespace WebApi.Services
     public class SearchService : ISearchService
     {
         private readonly ILapisRepository lapisRepository;
+        private readonly ILapisCodeRepository lapisCodeRepository;
         private readonly ILapisImageRepository imageRepository;
-        public SearchService(ILapisRepository lapisRepository, ILapisImageRepository imageRepository)
+        public SearchService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, ILapisImageRepository imageRepository)
         {
             this.lapisRepository = lapisRepository;
+            this.lapisCodeRepository = lapisCodeRepository;
             this.imageRepository = imageRepository;
         }
 
@@ -33,7 +35,7 @@ namespace WebApi.Services
 
                 if (!String.IsNullOrEmpty(country) && !String.IsNullOrEmpty(region) && !String.IsNullOrEmpty(user) && !String.IsNullOrEmpty(lapisId))
                 {
-                    var searchResult = lapisRepository.GetIdAndCodeByCode(country, region, user, lapisId, cancellationToken);
+                    var searchResult = lapisCodeRepository.GetIdAndCodeByCode(country, region, user, lapisId, cancellationToken);
                     var enumerator = searchResult.GetAsyncEnumerator(cancellationToken);
 
                     while (await enumerator.MoveNextAsync())

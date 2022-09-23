@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
@@ -14,12 +15,14 @@ namespace WebApi.Services
         const int FeedLimit = 8;
 
         private readonly ILapisRepository lapisRepository;
+        private readonly ILapisCodeRepository lapisCodeRepository;
         private readonly ILapisImageRepository imageRepository;
         private readonly IActivityRepository activityRepository;
 
-        public LapisService(ILapisRepository lapisRepository, ILapisImageRepository imageRepository, IActivityRepository activityRepository)
+        public LapisService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, ILapisImageRepository imageRepository, IActivityRepository activityRepository)
         {
             this.lapisRepository = lapisRepository;
+            this.lapisCodeRepository = lapisCodeRepository;
             this.imageRepository = imageRepository;
             this.activityRepository = activityRepository;
         }
@@ -27,11 +30,13 @@ namespace WebApi.Services
         public async Task<Responses.Models.Lapis> GetById(int id, CancellationToken cancellationToken)
         {
             var lapis = await lapisRepository.GetByIdAsync(id, cancellationToken);
+            var lapisCode = await lapisCodeRepository.GetByLapisId(id, cancellationToken);
             var lapisImage = lapis != null ? await imageRepository.GetById(lapis.ImageId, cancellationToken) : null;
 
             return lapis != null ? new Responses.Models.Lapis
             {
                 Id = lapis.Id,
+                Code = lapisCode != null ? String.Format("{0}/{1}/{2}/{3}", lapisCode.Country, lapisCode.Region, lapisCode.User, lapisCode.Lapis) : String.Empty,
                 Name = lapis.Name,
                 Description = lapis.Description,
                 UserId = lapis.UserId,
@@ -54,13 +59,12 @@ namespace WebApi.Services
         {
 
             var activities = await activityRepository.GetActivitiesByLapisId(id, FeedLimit, offset * FeedLimit, cancellationToken);
-
             var activityItems = activities
                  .Select(s =>
                      new LapisActivityItem
                      {
                          Id = s.Id,
-                         Type = "Location",
+                         Type = s.Type,
                          Description = s.Description,
                          TimeStamp = s.TimeStamp.ToUnixTime(),
                          UserId = s.UserId,

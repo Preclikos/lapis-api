@@ -1,4 +1,5 @@
 ﻿using System;
+using WebApi.Enums;
 
 namespace WebApi.Database.Models
 {
@@ -10,7 +11,7 @@ namespace WebApi.Database.Models
         public int ImageId { get; set; }
         public string OtherImageIds { get; set; }
         public string Description { get; set; }
-        public int Type { get; set; }
+        public ActivityTypes Type { get; set; }
         public DateTime TimeStamp { get; set; }
     }
 }
