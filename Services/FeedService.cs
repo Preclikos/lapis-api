@@ -24,7 +24,7 @@ namespace WebApi.Services
 
         public async Task<Feed> GetFeedItems(int country, int offset, CancellationToken cancellationToken)
         {
-            var activities = await activityRepository.GetLastActivities(country, FeedLimit, offset, cancellationToken);
+            var activities = await activityRepository.GetLastActivities(country, FeedLimit, FeedLimit * offset, cancellationToken);
             var imageIds = activities.Select(s => s.ImageId);
 
             var images = await imageRepository.GetById(imageIds, cancellationToken);

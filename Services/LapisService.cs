@@ -52,7 +52,8 @@ namespace WebApi.Services
 
         public async Task<LapisActivity> GetLapisActivities(int id, int offset, CancellationToken cancellationToken)
         {
-            var activities = await activityRepository.GetActivitiesByLapisId(id, FeedLimit, offset, cancellationToken);
+
+            var activities = await activityRepository.GetActivitiesByLapisId(id, FeedLimit, offset * FeedLimit, cancellationToken);
 
             var activityItems = activities
                  .Select(s =>

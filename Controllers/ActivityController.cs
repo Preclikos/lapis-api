@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         [HttpGet("Feed/{country}/{offset}")]
         public async Task<Feed> Feed(int country, int offset, CancellationToken cancellationToken)
         {
-            return await feedService.GetFeedItems(0, country, cancellationToken);
+            return await feedService.GetFeedItems(country, offset, cancellationToken);
         }
 
     }
