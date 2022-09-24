@@ -39,6 +39,7 @@ namespace WebApi.Services
                 Code = lapisCode != null ? String.Format("{0}/{1}/{2}/{3}", lapisCode.Country, lapisCode.Region, lapisCode.User, lapisCode.Lapis) : String.Empty,
                 Name = lapis.Name,
                 Description = lapis.Description,
+                TimeStamp = lapis.TimeStamp.ToUnixTime(),
                 UserId = lapis.UserId,
                 Image = GetLapisImage(lapisImage)
             } : null;
