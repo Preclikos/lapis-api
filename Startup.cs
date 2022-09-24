@@ -139,6 +139,7 @@ namespace LapisApi
             services.AddTransient<ILapisCodeRepository, LapisCodeRepository>();
             services.AddTransient<IActivityRepository, ActivityRepository>();
             services.AddTransient<ILapisImageRepository, LapisImageRepository>();
+            services.AddTransient<ILapisLocationRepository, LapisLocationRepository>();
             services.AddTransient<IUserImageRepository, UserImageRepository>();
 
             services.AddScoped<IUserService, UserService>();

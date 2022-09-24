@@ -29,5 +29,11 @@ namespace WebApi.Controllers
         {
             return await lapisService.GetLapisActivities(id, offset, cancellationToken);
         }
+
+        [HttpGet("Id/{id}/LastLocation")]
+        public async Task<LapisLocation> GetLapisLastLocationById(int id, CancellationToken cancellationToken)
+        {
+            return await lapisService.GetLapisLastLocation(id, cancellationToken);
+        }
     }
 }

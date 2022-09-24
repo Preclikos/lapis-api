@@ -17,14 +17,18 @@ namespace WebApi.Services
         private readonly ILapisRepository lapisRepository;
         private readonly ILapisCodeRepository lapisCodeRepository;
         private readonly ILapisImageRepository imageRepository;
+        private readonly ILapisLocationRepository locationRepository;
         private readonly IActivityRepository activityRepository;
+        
 
-        public LapisService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, ILapisImageRepository imageRepository, IActivityRepository activityRepository)
+        public LapisService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, ILapisImageRepository imageRepository, ILapisLocationRepository locationRepository, IActivityRepository activityRepository)
         {
             this.lapisRepository = lapisRepository;
             this.lapisCodeRepository = lapisCodeRepository;
             this.imageRepository = imageRepository;
+            this.locationRepository = locationRepository;
             this.activityRepository = activityRepository;
+            
         }
 
         public async Task<Responses.Models.Lapis> GetById(int id, CancellationToken cancellationToken)
@@ -77,6 +81,17 @@ namespace WebApi.Services
             {
                 ActivityItems = activityItems
             };
+        }
+
+
+        public async Task<Responses.Models.LapisLocation> GetLapisLastLocation(int id, CancellationToken cancellationToken)
+        {
+            var location = await locationRepository.GetLastByLapisId(id, cancellationToken);
+            return location != null ? new Responses.Models.LapisLocation
+            {
+                Lat = location.Lat,
+                Long = location.Long,
+            } : new Responses.Models.LapisLocation();
         }
     }
 }

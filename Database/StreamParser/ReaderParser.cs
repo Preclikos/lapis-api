@@ -2,7 +2,7 @@
 using System.Data.Common;
 using System.Threading;
 
-namespace WebApi.Database.Helpers
+namespace WebApi.Database.StreamParser
 {
     public class ReaderParser<T> : IAsyncEnumerable<T>
     {
