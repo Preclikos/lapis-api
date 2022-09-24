@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,7 +67,7 @@ namespace WebApi.Services
 
             var activities = await activityRepository.GetActivitiesByLapisId(id, FeedLimit, offset * FeedLimit, cancellationToken);
             var activityItems = activities
-                 .Select(s =>
+                 .Select(async s =>
                      new LapisActivityItem
                      {
                          Id = s.Id,
@@ -73,16 +75,27 @@ namespace WebApi.Services
                          Description = s.Description,
                          TimeStamp = s.TimeStamp.ToUnixTime(),
                          UserId = s.UserId,
-                         //Image = GetFeedImage(images, s.ImageId)
+                         Images = await GetActivityImages(s.ImageId, s.OtherImageIds, cancellationToken)
                      }
                  );
 
+            Task.WaitAll(activityItems.ToArray(), cancellationToken);
+
             return new LapisActivity(FeedLimit)
             {
-                ActivityItems = activityItems
+                ActivityItems = activityItems.Select(s => s.Result)
             };
         }
 
+        public async Task<IEnumerable<Image>> GetActivityImages(int imageId, string otherImageIdsJson, CancellationToken cancellationToken)
+        {
+            var imageIds = new [] { imageId };
+            var otherImages = JsonConvert.DeserializeObject<int[]>(otherImageIdsJson);
+
+            var images = await imageRepository.GetById(imageIds.Concat(otherImages), cancellationToken);
+
+            return images.Select(s => new Image { Src = s.Path });
+        }
 
         public async Task<Responses.Models.LapisLocation> GetLapisLastLocation(int id, CancellationToken cancellationToken)
         {
