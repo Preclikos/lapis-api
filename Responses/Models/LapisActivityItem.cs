@@ -11,5 +11,6 @@ namespace WebApi.Responses.Models
         public string Description { get; set; }
         public long TimeStamp { get; set; } 
         public IEnumerable<Image> Images { get; set; }
+        public LapisActivityLocation Location { get; set; }
     }
 }

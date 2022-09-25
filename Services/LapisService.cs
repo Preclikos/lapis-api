@@ -75,7 +75,8 @@ namespace WebApi.Services
                          Description = s.Description,
                          TimeStamp = s.TimeStamp.ToUnixTime(),
                          UserId = s.UserId,
-                         Images = await GetActivityImages(s.ImageId, s.OtherImageIds, cancellationToken)
+                         Images = await GetActivityImages(s.ImageId, s.OtherImageIds, cancellationToken),
+                         Location = s.LocationId != null ? await GetLapisActivityLocation((int)s.LocationId, cancellationToken) : null
                      }
                  );
 
@@ -105,6 +106,18 @@ namespace WebApi.Services
                 Lat = location.Lat,
                 Long = location.Long,
             } : new Responses.Models.LapisLocation();
+        }
+
+        public async Task<LapisActivityLocation> GetLapisActivityLocation(int id, CancellationToken cancellationToken)
+        {
+            var location = await locationRepository.GetById(id, cancellationToken);
+            return location != null ? new LapisActivityLocation
+            {
+                Lat = location.Lat,
+                Long = location.Long,
+                CountryCode = location.CountryCode,
+                City = location.City,
+            } : new LapisActivityLocation();
         }
     }
 }

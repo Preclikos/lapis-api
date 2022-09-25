@@ -15,6 +15,21 @@ namespace WebApi.Database.Repositories
             _context = context;
         }
 
+        public async Task<LapisLocation> GetById(int id, CancellationToken cancellationToken)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = @"SELECT * FROM `LapisLocations` WHERE `Id`=@Id LIMIT 1";
+
+                connection.Open();
+                var result = await connection.QueryFirstOrDefaultAsync<LapisLocation>(new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
+                connection.Close();
+
+                return result;
+
+            }
+        }
+
         public async Task<LapisLocation> GetLastByLapisId(int id, CancellationToken cancellationToken)
         {
             using (var connection = _context.CreateConnection())
