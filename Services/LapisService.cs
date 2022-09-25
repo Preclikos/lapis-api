@@ -83,7 +83,7 @@ namespace WebApi.Services
 
             return new LapisActivity(FeedLimit)
             {
-                ActivityItems = activityItems.Select(s => s.Result)
+                ActivityItems = activityItems.Where(w => w.IsCompleted).Select(s => s.Result)
             };
         }
 
