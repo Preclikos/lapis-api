@@ -66,26 +66,29 @@ namespace WebApi.Services
         {
 
             var activities = await activityRepository.GetActivitiesByLapisId(id, FeedLimit, offset * FeedLimit, cancellationToken);
-            var activityItems = activities
-                 .Select(async s =>
-                     new LapisActivityItem
-                     {
-                         Id = s.Id,
-                         Type = s.Type,
-                         Description = s.Description,
-                         TimeStamp = s.TimeStamp.ToUnixTime(),
-                         UserId = s.UserId,
-                         Images = await GetActivityImages(s.ImageId, s.OtherImageIds, cancellationToken),
-                         Location = s.LocationId != null ? await GetLapisActivityLocation((int)s.LocationId, cancellationToken) : null
-                     }
-                 );
-
-            Task.WaitAll(activityItems.ToArray(), cancellationToken);
-
-            return new LapisActivity(FeedLimit)
+            if (activities != null && activities.Count() > 0)
             {
-                ActivityItems = activityItems.Where(w => w.IsCompleted).Select(s => s.Result)
-            };
+                var activityItems = activities
+                     .Select(async s =>
+                         new LapisActivityItem
+                         {
+                             Id = s.Id,
+                             Type = s.Type,
+                             Description = s.Description,
+                             TimeStamp = s.TimeStamp.ToUnixTime(),
+                             UserId = s.UserId,
+                             Images = await GetActivityImages(s.ImageId, s.OtherImageIds, cancellationToken),
+                             Location = s.LocationId != null ? await GetLapisActivityLocation((int)s.LocationId, cancellationToken) : null
+                         }
+                     );
+
+                Task.WaitAll(activityItems.ToArray(), cancellationToken);
+                return new LapisActivity(FeedLimit)
+                {
+                    ActivityItems = activityItems.Where(w => w.IsCompleted).Select(s => s.Result)
+                };
+            }
+            return new LapisActivity(FeedLimit);
         }
 
         public async Task<IEnumerable<Image>> GetActivityImages(int imageId, string otherImageIdsJson, CancellationToken cancellationToken)
@@ -95,7 +98,7 @@ namespace WebApi.Services
 
             var images = await imageRepository.GetById(imageIds.Concat(otherImages), cancellationToken);
 
-            return images.Select(s => new Image { Src = s.Path });
+            return images != null && images.Count() > 0 ? images.Select(s => new Image { Src = s.Path }) : new List<Image>();
         }
 
         public async Task<Responses.Models.LapisLocation> GetLapisLastLocation(int id, CancellationToken cancellationToken)
