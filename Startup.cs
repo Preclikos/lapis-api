@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -123,7 +124,7 @@ namespace LapisApi
                 };*/
             });
 
-
+            services.AddHttpContextAccessor();
             services.AddAuthorization();
 
             services.AddTransient<UserNameMiddleware>();
@@ -142,6 +143,7 @@ namespace LapisApi
             services.AddTransient<ILapisLocationRepository, LapisLocationRepository>();
             services.AddTransient<IUserImageRepository, UserImageRepository>();
 
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IFeedService, FeedService>();
@@ -194,6 +196,12 @@ namespace LapisApi
 
             app.UseUserNameMiddleware();
             app.UseProxyMiddleware();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                ForwardedHeaders.XForwardedProto
+            });
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers()

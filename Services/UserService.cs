@@ -31,7 +31,7 @@ namespace WebApi.Services
                 Country = userProfile?.CountryId.ToString(),
                 Image = new Image
                 {
-                    Src = userImage?.Path,
+                    Path = userImage?.Path,
                 }
             };
         }
@@ -50,7 +50,7 @@ namespace WebApi.Services
                 Country = userProfile != null ? userProfile.CountryId.ToString() : "",
                 Image = new Image
                 {
-                    Src = userImage?.Path,
+                    Path = userImage?.Path,
                 }
             };
         }

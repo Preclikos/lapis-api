@@ -51,7 +51,7 @@ namespace WebApi.Services
                             Name = lapis.Name,
                             Code = lapisCode,
                             Image = lapisImage != null ?
-                                    new Image { Src = lapisImage.Path, Height = lapisImage.Height, Width = lapisImage.Width } :
+                                    new Image { Path = lapisImage.Path, Height = lapisImage.Height, Width = lapisImage.Width } :
                                     new Image { }
                         };
                     }

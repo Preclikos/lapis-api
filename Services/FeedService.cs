@@ -15,11 +15,13 @@ namespace WebApi.Services
 
         private readonly IActivityRepository activityRepository;
         private readonly ILapisImageRepository imageRepository;
+        private readonly IImageService imageService;
 
-        public FeedService(IActivityRepository activityRepository, ILapisImageRepository imageRepository)
+        public FeedService(IActivityRepository activityRepository, ILapisImageRepository imageRepository, IImageService imageService)
         {
             this.activityRepository = activityRepository;
             this.imageRepository = imageRepository;
+            this.imageService = imageService;
         }
 
         public async Task<Feed> GetFeedItems(int country, int offset, CancellationToken cancellationToken)
@@ -27,7 +29,7 @@ namespace WebApi.Services
             var activities = await activityRepository.GetLastActivities(country, FeedLimit, FeedLimit * offset, cancellationToken);
             var imageIds = activities.Select(s => s.ImageId);
 
-            var images = await imageRepository.GetById(imageIds, cancellationToken);
+            var images = await imageService.GetById(imageIds, cancellationToken);
             var feedItems = activities
                  .Select(s =>
                      new FeedItem
@@ -38,26 +40,13 @@ namespace WebApi.Services
                          Description = s.Description,
                          TimeStamp = s.TimeStamp.ToUnixTime(),
                          UserId = s.UserId,
-                         Image = GetFeedImage(images, s.ImageId)
+                         Image = images.SingleOrDefault(sw => s.ImageId == sw.Id)
                      }
                  );
             return new Feed(FeedLimit)
             {
                 FeedItems = feedItems
             };
-        }
-
-        private Responses.Models.Image GetFeedImage(IEnumerable<Database.Models.LapisImage> images, int imageId)
-        {
-            var image = images.SingleOrDefault(sw => imageId == sw.Id);
-
-            return image != null ? new Responses.Models.Image
-            {
-                Src = image.Path,
-                Width = image.Width,
-                Height = image.Height,
-                Alt = ""
-            } : new Responses.Models.Image();
         }
     }
 }

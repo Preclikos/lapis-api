@@ -55,7 +55,7 @@ namespace WebApi.Services
         {
             return image != null ? new Image
             {
-                Src = image.Path,
+                Path = image.Path,
                 Width = image.Width,
                 Height = image.Height
             }
@@ -98,7 +98,7 @@ namespace WebApi.Services
 
             var images = await imageRepository.GetById(imageIds.Concat(otherImages), cancellationToken);
 
-            return images != null && images.Count() > 0 ? images.Select(s => new Image { Src = s.Path }) : new List<Image>();
+            return images != null && images.Count() > 0 ? images.Select(s => new Image { Path = s.Path }) : new List<Image>();
         }
 
         public async Task<Responses.Models.LapisLocation> GetLapisLastLocation(int id, CancellationToken cancellationToken)
