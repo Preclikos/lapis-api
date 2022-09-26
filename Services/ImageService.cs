@@ -92,7 +92,11 @@ namespace WebApi.Services
 
         private IPAddress GetIP()
         {
-            return httpContextAccessor.HttpContext.Request.HttpContext.Connection.RemoteIpAddress;
+            var ip = httpContextAccessor.HttpContext.Request.HttpContext.Connection.RemoteIpAddress;
+
+            Console.WriteLine(ip.ToString());
+
+            return ip;
         }
     }
 }
