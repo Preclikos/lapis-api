@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
 using WebApi.Responses.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace WebApi.Services
 {
@@ -19,15 +21,17 @@ namespace WebApi.Services
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILapisImageRepository lapisRepository;
         private readonly IUserImageRepository userRepository;
+        private readonly IWebHostEnvironment environment;
 
-        public ImageService(IHttpContextAccessor httpContextAccessor, ILapisImageRepository lapisRepository, IUserImageRepository userRepository)
+        public ImageService(IHttpContextAccessor httpContextAccessor, ILapisImageRepository lapisRepository, IUserImageRepository userRepository, IWebHostEnvironment environment)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.lapisRepository = lapisRepository;
             this.userRepository = userRepository;
+            this.environment = environment;
         }
 
-        public async Task<Image> GetLapisImageById(int id, CancellationToken cancellationToken)
+        public async Task<Image> GetById(int id, CancellationToken cancellationToken)
         {
             var ip = GetIP();
             var image = await lapisRepository.GetById(id, cancellationToken);
@@ -92,7 +96,9 @@ namespace WebApi.Services
 
         private IPAddress GetIP()
         {
-            return httpContextAccessor.HttpContext.Request.HttpContext.Connection.RemoteIpAddress;
+            return !environment.IsDevelopment() ? 
+                httpContextAccessor.HttpContext.Request.HttpContext.Connection.RemoteIpAddress : 
+                IPAddress.Parse("192.168.1.200");
         }
     }
 }

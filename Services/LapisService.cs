@@ -18,16 +18,16 @@ namespace WebApi.Services
 
         private readonly ILapisRepository lapisRepository;
         private readonly ILapisCodeRepository lapisCodeRepository;
-        private readonly ILapisImageRepository imageRepository;
+        private readonly IImageService imageService;
         private readonly ILapisLocationRepository locationRepository;
         private readonly IActivityRepository activityRepository;
         
 
-        public LapisService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, ILapisImageRepository imageRepository, ILapisLocationRepository locationRepository, IActivityRepository activityRepository)
+        public LapisService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, IImageService imageService, ILapisLocationRepository locationRepository, IActivityRepository activityRepository)
         {
             this.lapisRepository = lapisRepository;
             this.lapisCodeRepository = lapisCodeRepository;
-            this.imageRepository = imageRepository;
+            this.imageService = imageService;
             this.locationRepository = locationRepository;
             this.activityRepository = activityRepository;
             
@@ -37,7 +37,7 @@ namespace WebApi.Services
         {
             var lapis = await lapisRepository.GetByIdAsync(id, cancellationToken);
             var lapisCode = await lapisCodeRepository.GetByLapisId(id, cancellationToken);
-            var lapisImage = lapis != null ? await imageRepository.GetById(lapis.ImageId, cancellationToken) : null;
+            var lapisImage = lapis != null ? await imageService.GetById(lapis.ImageId, cancellationToken) : null;
 
             return lapis != null ? new Responses.Models.Lapis
             {
@@ -47,19 +47,8 @@ namespace WebApi.Services
                 Description = lapis.Description,
                 TimeStamp = lapis.TimeStamp.ToUnixTime(),
                 UserId = lapis.UserId,
-                Image = GetLapisImage(lapisImage)
+                Image = lapisImage
             } : null;
-        }
-
-        private Image GetLapisImage(LapisImage image)
-        {
-            return image != null ? new Image
-            {
-                Path = image.Path,
-                Width = image.Width,
-                Height = image.Height
-            }
-            : new Image();
         }
 
         public async Task<LapisActivity> GetLapisActivities(int id, int offset, CancellationToken cancellationToken)
@@ -96,9 +85,9 @@ namespace WebApi.Services
             var imageIds = new [] { imageId };
             var otherImages = JsonConvert.DeserializeObject<int[]>(otherImageIdsJson);
 
-            var images = await imageRepository.GetById(imageIds.Concat(otherImages), cancellationToken);
+            var images = await imageService.GetById(imageIds.Concat(otherImages), cancellationToken);
 
-            return images != null && images.Count() > 0 ? images.Select(s => new Image { Path = s.Path }) : new List<Image>();
+            return images != null && images.Count() > 0 ? images : new List<Image>();
         }
 
         public async Task<Responses.Models.LapisLocation> GetLapisLastLocation(int id, CancellationToken cancellationToken)
