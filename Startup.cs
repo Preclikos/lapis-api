@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
@@ -36,6 +37,10 @@ namespace LapisApi
         {
             services.AddControllers();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownProxies.Add(IPAddress.Parse("192.168.100.250"));
+            });
 
             var origins = Configuration.GetSection("AllowOrigin");
             var originArray = origins.AsEnumerable().Where(w => !string.IsNullOrEmpty(w.Value)).Select(s => s.Value).ToArray();
