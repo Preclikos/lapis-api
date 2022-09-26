@@ -40,6 +40,7 @@ namespace LapisApi
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.KnownProxies.Add(IPAddress.Parse("192.168.100.250"));
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
             var origins = Configuration.GetSection("AllowOrigin");
@@ -202,11 +203,7 @@ namespace LapisApi
             app.UseUserNameMiddleware();
             app.UseProxyMiddleware();
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                ForwardedHeaders.XForwardedProto
-            });
+            app.UseForwardedHeaders();
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers()
