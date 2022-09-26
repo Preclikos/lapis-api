@@ -29,7 +29,7 @@ namespace WebApi.Services
             var activities = await activityRepository.GetLastActivities(country, FeedLimit, FeedLimit * offset, cancellationToken);
             var imageIds = activities.Select(s => s.ImageId);
 
-            var images = await imageService.GetById(imageIds, cancellationToken);
+            var images = await imageService.GetLapisById(imageIds, cancellationToken);
             var feedItems = activities
                  .Select(s =>
                      new FeedItem

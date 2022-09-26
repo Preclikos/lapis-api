@@ -7,7 +7,7 @@ namespace WebApi.Services
 {
     public interface IImageService
     {
-        public Task<Image> GetById(int id, CancellationToken cancellationToken);
-        public Task<IEnumerable<Image>> GetById(IEnumerable<int> ids, CancellationToken cancellationToken);
+        public Task<Image> GetLapisById(int id, CancellationToken cancellationToken);
+        public Task<IEnumerable<Image>> GetLapisById(IEnumerable<int> ids, CancellationToken cancellationToken);
     }
 }

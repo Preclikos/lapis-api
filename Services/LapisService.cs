@@ -37,7 +37,7 @@ namespace WebApi.Services
         {
             var lapis = await lapisRepository.GetByIdAsync(id, cancellationToken);
             var lapisCode = await lapisCodeRepository.GetByLapisId(id, cancellationToken);
-            var lapisImage = lapis != null ? await imageService.GetById(lapis.ImageId, cancellationToken) : null;
+            var lapisImage = lapis != null ? await imageService.GetLapisById(lapis.ImageId, cancellationToken) : null;
 
             return lapis != null ? new Responses.Models.Lapis
             {
@@ -85,7 +85,7 @@ namespace WebApi.Services
             var imageIds = new [] { imageId };
             var otherImages = JsonConvert.DeserializeObject<int[]>(otherImageIdsJson);
 
-            var images = await imageService.GetById(imageIds.Concat(otherImages), cancellationToken);
+            var images = await imageService.GetLapisById(imageIds.Concat(otherImages), cancellationToken);
 
             return images != null && images.Count() > 0 ? images : new List<Image>();
         }

@@ -31,7 +31,7 @@ namespace WebApi.Services
             this.environment = environment;
         }
 
-        public async Task<Image> GetById(int id, CancellationToken cancellationToken)
+        public async Task<Image> GetLapisById(int id, CancellationToken cancellationToken)
         {
             var ip = GetIP();
             var image = await lapisRepository.GetById(id, cancellationToken);
@@ -49,7 +49,7 @@ namespace WebApi.Services
 
         }
 
-        public async Task<IEnumerable<Image>> GetById(IEnumerable<int> ids, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Image>> GetLapisById(IEnumerable<int> ids, CancellationToken cancellationToken)
         {
             var ip = GetIP();
             var images = await lapisRepository.GetById(ids, cancellationToken);
