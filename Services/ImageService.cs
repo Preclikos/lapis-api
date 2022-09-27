@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
 using WebApi.Responses.Models;
 using Microsoft.Extensions.Hosting;
+using WebApi.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace WebApi.Services
 {
@@ -22,13 +24,15 @@ namespace WebApi.Services
         private readonly ILapisImageRepository lapisRepository;
         private readonly IUserImageRepository userRepository;
         private readonly IWebHostEnvironment environment;
+        private readonly IOptions<ImageServerOptions> imageServerOptions;
 
-        public ImageService(IHttpContextAccessor httpContextAccessor, ILapisImageRepository lapisRepository, IUserImageRepository userRepository, IWebHostEnvironment environment)
+        public ImageService(IHttpContextAccessor httpContextAccessor, ILapisImageRepository lapisRepository, IUserImageRepository userRepository, IWebHostEnvironment environment, IOptions<ImageServerOptions> imageServerOptions)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.lapisRepository = lapisRepository;
             this.userRepository = userRepository;
             this.environment = environment;
+            this.imageServerOptions = imageServerOptions;
         }
 
         public async Task<Image> GetLapisById(int id, CancellationToken cancellationToken)
@@ -98,7 +102,7 @@ namespace WebApi.Services
         {
             return !environment.IsDevelopment() ? 
                 httpContextAccessor.HttpContext.Request.HttpContext.Connection.RemoteIpAddress : 
-                IPAddress.Parse("192.168.1.200");
+                IPAddress.Parse(imageServerOptions.Value.ByPassAddress);
         }
     }
 }

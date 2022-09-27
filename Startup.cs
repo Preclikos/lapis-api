@@ -11,6 +11,7 @@ using Prometheus;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using WebApi.Configuration;
 using WebApi.Database.Interfaces;
 using WebApi.Database.Repositories;
 using WebApi.Databases;
@@ -34,9 +35,12 @@ namespace LapisApi
         {
             services.AddControllers();
 
+            services.Configure<ProxyOptions>(options => Configuration.GetSection("Proxy").Bind(options));
+            services.Configure<ImageServerOptions>(options => Configuration.GetSection("ImageServer").Bind(options));
+
             services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.KnownProxies.Add(IPAddress.Parse("192.168.100.250"));
+                options.KnownProxies.Add(IPAddress.Parse(Configuration.GetSection("Proxy").GetValue<string>("KnowProxy")));
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
