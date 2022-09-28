@@ -12,5 +12,7 @@ namespace WebApi.Services.Interfaces
         public Task<LapisActivity> GetLapisActivities(int id, int offset, CancellationToken cancellationToken);
 
         public Task<LapisLocation> GetLapisLastLocation(int id, CancellationToken cancellationToken);
+
+        public Task<LapisOverview> GetOverviewById(int id, CancellationToken cancellationToken);
     }
 }

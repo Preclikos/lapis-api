@@ -44,5 +44,20 @@ namespace WebApi.Database.Repositories
 
             }
         }
+
+        public async Task<int> GetLocationCountByLapisId(int id, CancellationToken cancellationToken)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = @"SELECT COUNT(1) AS LocationCount FROM `LapisLocations` WHERE `LapisId`=@LapisId";
+
+                connection.Open();
+                var result = await connection.QueryFirstOrDefaultAsync<int>(new CommandDefinition(sql, new { LapisId = id }, cancellationToken: cancellationToken));
+                connection.Close();
+
+                return result;
+
+            }
+        }
     }
 }

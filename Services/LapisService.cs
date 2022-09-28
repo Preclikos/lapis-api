@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
-using WebApi.Database.Models;
 using WebApi.Extensions;
 using WebApi.Responses.Models;
 using WebApi.Services.Interfaces;
@@ -21,7 +20,7 @@ namespace WebApi.Services
         private readonly IImageService imageService;
         private readonly ILapisLocationRepository locationRepository;
         private readonly IActivityRepository activityRepository;
-        
+
 
         public LapisService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, IImageService imageService, ILapisLocationRepository locationRepository, IActivityRepository activityRepository)
         {
@@ -30,7 +29,7 @@ namespace WebApi.Services
             this.imageService = imageService;
             this.locationRepository = locationRepository;
             this.activityRepository = activityRepository;
-            
+
         }
 
         public async Task<Responses.Models.Lapis> GetById(int id, CancellationToken cancellationToken)
@@ -74,7 +73,7 @@ namespace WebApi.Services
                 Task.WaitAll(activityItems.ToArray(), cancellationToken);
                 return new LapisActivity(FeedLimit)
                 {
-                    ActivityItems = activityItems.Where(w => w.IsCompleted).Select(s => s.Result)
+                    ActivityItems = activityItems.Where(w => w.IsCompleted && !w.IsCanceled).Select(s => s.Result)
                 };
             }
             return new LapisActivity(FeedLimit);
@@ -82,7 +81,7 @@ namespace WebApi.Services
 
         public async Task<IEnumerable<Image>> GetActivityImages(int imageId, string otherImageIdsJson, CancellationToken cancellationToken)
         {
-            var imageIds = new [] { imageId };
+            var imageIds = new[] { imageId };
             var otherImages = JsonConvert.DeserializeObject<int[]>(otherImageIdsJson);
 
             var images = await imageService.GetLapisById(imageIds.Concat(otherImages), cancellationToken);
@@ -110,6 +109,16 @@ namespace WebApi.Services
                 CountryCode = location.CountryCode,
                 City = location.City,
             } : new LapisActivityLocation();
+        }
+
+        public async Task<LapisOverview> GetOverviewById(int id, CancellationToken cancellationToken)
+        {
+            var locationCount = await locationRepository.GetLocationCountByLapisId(id, cancellationToken);
+
+            return new LapisOverview
+            {
+                Locations = locationCount,
+            };
         }
     }
 }

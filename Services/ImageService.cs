@@ -18,7 +18,6 @@ namespace WebApi.Services
 {
     public class ImageService : IImageService
     {
-        private const string SecureString = "kanarekNakopnulKyblik";
 
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILapisImageRepository lapisRepository;
@@ -78,19 +77,17 @@ namespace WebApi.Services
 
             var timeStamp = ToUnixTimestamp(currentDate);
 
-            var securePatter = "{0}{1}{2} {3}";
-
             var ipv4 = ip.ToString();
 
-            var fullFilledPatter = String.Format(securePatter, timeStamp, path, ipv4, SecureString);
+            var securePhase = $"{timeStamp}{path}{ipv4} {imageServerOptions.Value.SecurityPhase}";      
 
-            var filledByteArray = Encoding.ASCII.GetBytes(fullFilledPatter);
+            var securePhaseBytes = Encoding.ASCII.GetBytes(securePhase);
 
-            var hashed = Convert.ToBase64String(MD5.HashData(filledByteArray));
+            var hashed = Convert.ToBase64String(MD5.HashData(securePhaseBytes));
 
             var md5HashString = hashed.Replace('+', '-').Replace('/', '_').Replace("=", "");
 
-            return String.Format("{0}?hash={1}&expires={2}", path,md5HashString, timeStamp);
+            return $"{path}?hash={md5HashString}&expires={timeStamp}";
         }
 
         private int ToUnixTimestamp(DateTime value)

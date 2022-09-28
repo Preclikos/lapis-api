@@ -9,5 +9,7 @@ namespace WebApi.Database.Interfaces
         public Task<LapisLocation> GetById(int id, CancellationToken cancellationToken);
 
         public Task<LapisLocation> GetLastByLapisId(int id, CancellationToken cancellationToken);
+
+        public Task<int> GetLocationCountByLapisId(int id, CancellationToken cancellationToken);
     }
 }
