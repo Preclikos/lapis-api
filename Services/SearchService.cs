@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using WebApi.Database.Interfaces;
 using WebApi.Responses.Models;
 using WebApi.Services.Interfaces;
@@ -14,12 +13,12 @@ namespace WebApi.Services
     {
         private readonly ILapisRepository lapisRepository;
         private readonly ILapisCodeRepository lapisCodeRepository;
-        private readonly ILapisImageRepository imageRepository;
-        public SearchService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, ILapisImageRepository imageRepository)
+        private readonly IImageService imageService;
+        public SearchService(ILapisRepository lapisRepository, ILapisCodeRepository lapisCodeRepository, IImageService imageService)
         {
             this.lapisRepository = lapisRepository;
             this.lapisCodeRepository = lapisCodeRepository;
-            this.imageRepository = imageRepository;
+            this.imageService = imageService;
         }
 
         public async IAsyncEnumerable<SearchItem> GetLapisesByCode(string code, [EnumeratorCancellation] CancellationToken cancellationToken)
@@ -41,7 +40,7 @@ namespace WebApi.Services
                     while (await enumerator.MoveNextAsync())
                     {
                         var lapis = await lapisRepository.GetByIdAsync(enumerator.Current.LapisId, cancellationToken);
-                        var lapisImage = await imageRepository.GetById(lapis.ImageId, cancellationToken);
+                        var lapisImage = await imageService.GetLapisById(lapis.ImageId, cancellationToken);
 
                         var lapisCode = enumerator.Current.Country + "/" + enumerator.Current.Region + "/" + enumerator.Current.User + "/" + enumerator.Current.Lapis;
 
@@ -50,9 +49,7 @@ namespace WebApi.Services
                             Id = lapis.Id,
                             Name = lapis.Name,
                             Code = lapisCode,
-                            Image = lapisImage != null ?
-                                    new Image { Path = lapisImage.Path, Height = lapisImage.Height, Width = lapisImage.Width } :
-                                    new Image { }
+                            Image = lapisImage
                         };
                     }
                 }
