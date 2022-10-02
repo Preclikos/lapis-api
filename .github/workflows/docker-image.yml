@@ -31,8 +31,8 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: repository.preclikos.cz:5000
-          username: none
-          password: none
+          username: testuser
+          password: testpassword
       -
         name: Build and push
         uses: docker/build-push-action@v3
