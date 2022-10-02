@@ -26,27 +26,34 @@ namespace WebApi.Services
 
         public async Task<Feed> GetFeedItems(int country, int offset, CancellationToken cancellationToken)
         {
-            var activities = await activityRepository.GetLastActivities(country, FeedLimit, FeedLimit * offset, cancellationToken);
-            var imageIds = activities.Select(s => s.ImageId);
-
-            var images = await imageService.GetLapisById(imageIds, cancellationToken);
-            var feedItems = activities
-                 .Select(s =>
-                     new FeedItem
-                     {
-                         Id = s.Id,
-                         Type = "Location",
-                         LapisId = s.LapisId,
-                         Description = s.Description,
-                         TimeStamp = s.TimeStamp.ToUnixTime(),
-                         UserId = s.UserId,
-                         Image = images.SingleOrDefault(sw => s.ImageId == sw.Id)
-                     }
-                 );
-            return new Feed(FeedLimit)
+            try
             {
-                FeedItems = feedItems
-            };
+                var activities = await activityRepository.GetLastActivities(country, FeedLimit, FeedLimit * offset, cancellationToken);
+                var imageIds = activities.Select(s => s.ImageId);
+
+                var images = await imageService.GetLapisById(imageIds, cancellationToken);
+                var feedItems = activities
+                     .Select(s =>
+                         new FeedItem
+                         {
+                             Id = s.Id,
+                             Type = "Location",
+                             LapisId = s.LapisId,
+                             Description = s.Description,
+                             TimeStamp = s.TimeStamp.ToUnixTime(),
+                             UserId = s.UserId,
+                             Image = images.SingleOrDefault(sw => s.ImageId == sw.Id)
+                         }
+                     );
+                return new Feed(FeedLimit)
+                {
+                    FeedItems = feedItems
+                };
+            }
+            catch(TaskCanceledException)
+            {
+                return new Feed(FeedLimit);
+            }
         }
     }
 }

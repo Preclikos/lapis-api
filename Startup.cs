@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +35,8 @@ namespace LapisApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHealthChecks();
+
             services.AddControllers();
 
             services.Configure<ProxyOptions>(options => Configuration.GetSection("Proxy").Bind(options));
@@ -40,7 +44,12 @@ namespace LapisApi
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.KnownProxies.Add(IPAddress.Parse(Configuration.GetSection("Proxy").GetValue<string>("KnowProxy")));
+                //options.KnownProxies.Add(IPAddress.Parse(Configuration.GetSection("Proxy").GetValue<string>("KnowProxy")));
+                options.KnownNetworks.Add(
+                    new IPNetwork(
+                        IPAddress.Parse(Configuration.GetSection("Proxy").GetValue<string>("KnowNetwork")),
+                        Configuration.GetSection("Proxy").GetValue<int>("NetworkLenght"))
+                    );
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
@@ -161,6 +170,11 @@ namespace LapisApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseHealthChecks("/healthz/live");
+
+            app.UseHealthChecks("/healthz/ready");
+
             bool useHttps = true;
             if (env.IsDevelopment())
             {
