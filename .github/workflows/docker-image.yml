@@ -33,6 +33,6 @@ jobs:
           cd k8s/base
           kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }}
           kustomize build ../../k8s/overlays/production
-          mkdir ~/.kube/config
+          mkdir ~/.kube
           echo -n "${{ secrets.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config
           kubectl get pods
