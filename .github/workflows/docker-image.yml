@@ -31,4 +31,5 @@ jobs:
         with:
           kustomize: '4.5.7'
       - run: |
-          kustomize build k8s/overlays/$GITHUB_ENV
+          (cd k8s/overlays/production && kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:$steps.meta.outputs.tags)
+          kustomize build k8s/overlays/production
