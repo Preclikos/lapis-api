@@ -33,4 +33,4 @@ jobs:
       - run: |
           kustomize version
           kustomize edit set image repository.preclikos.cz:/lapis/api:${{ steps.meta.outputs.tags }}
-          kustomize build ./k8s/overlays/production
+          kustomize build k8s/overlays/production
