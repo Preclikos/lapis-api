@@ -15,11 +15,18 @@ spec:
       labels:
         app: lapis-api
     spec:
+      volumes:
+        - name: nfs-storage-image
+          persistentVolumeClaim:
+            claimName: nfs-lapis-claim
       containers:
       - name: lapis-api
         image: lapis/api
         ports:
         - containerPort: 5000
+        volumeMounts:
+          - name: nfs-storage-image
+            mountPath: /app/images
         livenessProbe:
           httpGet:
             path: /healthz/live
