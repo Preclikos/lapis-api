@@ -49,3 +49,8 @@ spec:
               secretKeyRef:
                 name: lapis-api-secrets
                 key: connectionString
+          - name: ImageServer__SecurityPhase
+            valueFrom:
+              secretKeyRef:
+                name: lapis-image-secrets
+                key: secret-phase
