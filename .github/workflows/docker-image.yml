@@ -75,7 +75,7 @@ jobs:
       - name: 'Kustomize Build'
         run: |
           cd k8s/base
-          kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }}
+          kustomize edit set image repository.preclikos.cz:5000/lapis/api=${{ steps.meta.outputs.tags }}
           mkdir ~/.kube
           echo -n "${{ secrets.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config
-          kustomize build ../../k8s/base
+          kustomize build ../../k8s/base | kubectl apply -f -
