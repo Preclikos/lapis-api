@@ -20,3 +20,5 @@ jobs:
           kustomize_version: '4.5.7'
           kustomize_build_dir: './k8s/overlays/production'
           kustomize_output_file: "kustomize_deploy.yaml"
+      - name: Get color
+        run: cat kustomize_deploy.yaml
