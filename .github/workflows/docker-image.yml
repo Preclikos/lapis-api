@@ -8,60 +8,16 @@ on:
 
 jobs:
 
-  docker:
+  kustomize:
     runs-on: self-hosted
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
-      - 
-        name: Set up Docker Context for Buildx
-        id: buildx-context
-        run: |
-          docker context create builders
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: 'Kustomize Build'
+        uses: karancode/kustomize-github-action@master
         with:
-          version: latest
-          endpoint: builders
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-             repository.preclikos.cz:5000/lapis/api
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-      -
-        name: Login to Container Repository
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          registry: repository.preclikos.cz:5000
-          username: cluster
-          password: random
-      -
-        name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-  deploy:
-    runs-on: self-hosted
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: get pods
+          kustomize_version: '4.5.7'
+          kustomize_build_dir: './k8s/overlay/production'
+          kustomize_output_file: "kustomize_deploy.yaml"
+          kustomize_build_options: "--load_restrictor none"
