@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: lapis-api
-        image: repository.preclikos.cz:5000/lapis/api
+        image: lapis/api
         ports:
         - containerPort: 5000
         livenessProbe:
