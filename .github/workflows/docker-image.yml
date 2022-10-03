@@ -31,5 +31,4 @@ jobs:
         with:
           kustomize: '4.5.7'
       - run: |
-          sed -i "s/=${{ steps.meta.outputs.tags }}/$/g" k8s/base/kustomization.yaml
-          kustomize build k8s/overlays/production
+          kustomize build k8s/overlays/${{GITHUB_ENV}}
