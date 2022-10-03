@@ -27,11 +27,12 @@ jobs:
         uses: yokawasa/action-setup-kube-tools@v0.7.1
         with:
           kustomize: '4.5.7'
+          kubectl: '1.17.1'
       - name: 'Kustomize Build'
         run: |
           cd k8s/base
           kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }}
           kustomize build ../../k8s/overlays/production
-          mkdir .kube
-          echo -n "${{ secrets.KUBE_CONFIG }}" | base64 --decode > .kube/config
+          mkdir ~/.kube/config
+          echo -n "${{ secrets.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config
           kubectl get pods
