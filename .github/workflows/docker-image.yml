@@ -30,7 +30,7 @@ jobs:
         uses: yokawasa/action-setup-kube-tools@v0.7.1
         with:
           kustomize: '4.5.7'
-      - run: |
+        run: |
           cd k8s/base
-          kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }})
+          kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }}
           kustomize build ../../k8s/overlays/production
