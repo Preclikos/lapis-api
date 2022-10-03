@@ -12,6 +12,18 @@ jobs:
     runs-on: self-hosted
     steps:
       -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+             repository.preclikos.cz:5000/lapis/api
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      -
         name: Checkout
         uses: actions/checkout@v3
       - name: 'Kustomize Build'
@@ -20,3 +32,5 @@ jobs:
           kustomize: '4.5.7'
       - run: |
           kustomize version
+          kustomize edit set image repository.preclikos.cz:/lapis/api:${{ steps.meta.outputs.tags }}
+          kustomize build ./k8s/overlays/production
