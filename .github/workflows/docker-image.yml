@@ -31,6 +31,5 @@ jobs:
         with:
           kustomize: '4.5.7'
       - run: |
-          IMAGE_TAG=${{ steps.meta.outputs.tags }}
-          sed -i "s/IMAGE_TAG/$/g" k8s/base/kustomization.yaml
+          sed -i "s/=${{ steps.meta.outputs.tags }}/$/g" k8s/base/kustomization.yaml
           kustomize build k8s/overlays/production
