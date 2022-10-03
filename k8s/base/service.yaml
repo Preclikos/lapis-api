@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: lapis
+  name: lapis-api
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/path:   /metrics
+      prometheus.io/port:   '5000'
+spec:
+  selector:
+    app: lapis-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

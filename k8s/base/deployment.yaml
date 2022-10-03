@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: lapis
+  name: lapis-api
+  labels:
+    app: lapis-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lapis-api
+  template:
+    metadata:
+      labels:
+        app: lapis-api
+    spec:
+      containers:
+      - name: lapis-api
+        image: repository.preclikos.cz:5000/lapis/api:1.0.7
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /healthz/live
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        env:
+          - name: Proxy__KnowNetwork
+            value: 10.244.0.0
+          - name: Proxy__NetworkLenght
+            value: "16"
+          - name: ConnectionStrings__WebApi
+            valueFrom:
+              secretKeyRef:
+                name: lapis-api-secrets
+                key: connectionString
