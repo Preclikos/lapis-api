@@ -53,6 +53,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
+    needs: docker
     steps:
       -
         name: Docker meta
