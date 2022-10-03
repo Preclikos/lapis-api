@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
       - name: lapis-api
-        image: repository.preclikos.cz:5000/lapis/api:sha4564654
+        image: repository.preclikos.cz:5000/lapis/api
