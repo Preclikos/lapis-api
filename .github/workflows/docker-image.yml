@@ -31,5 +31,6 @@ jobs:
         with:
           kustomize: '4.5.7'
       - run: |
-          (cd k8s/overlays/production && kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }})
-          kustomize build k8s/overlays/production
+          cd k8s/base
+          kustomize edit set image repository.preclikos.cz:5000/lapis/api=repository.preclikos.cz:5000/lapis/api:${{ steps.meta.outputs.tags }})
+          kustomize build ../../k8s/overlays/production
