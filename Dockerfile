@@ -13,9 +13,9 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 
+ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
 ENV TZ Europe/Prague
-ENV ASPNETCORE_URLS http://*:80
-EXPOSE 80
+EXPOSE 5000
 
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "WebApi.dll"]
